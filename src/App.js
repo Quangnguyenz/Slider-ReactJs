@@ -5,7 +5,25 @@ import data from './data';
 function App() {
   const [people, setPeople] = useState(data);
   const [index, setIndex] = useState(0);
-  console.log(people)
+
+  useEffect(() => {
+    const lastIndex = people.length - 1;
+    if (index < 0) {
+      setIndex(lastIndex)
+    }
+    if (index > lastIndex) {
+      setIndex(0)
+    }
+  }, [index, people])
+
+  useEffect(() => {
+    let slider = setInterval(() => {
+      setIndex(index + 1);
+    }, 3000);
+    return () => clearInterval(slider)
+  }, [index])
+
+
   return <section className='section'>
     <div className="title">
       <h2>
@@ -17,9 +35,11 @@ function App() {
         const { id, image, name, title, quote } = person;
 
         let position = 'nextSlide';
+
         if (personIndex === index) {
           position = 'activeSlide'
         }
+
         if (personIndex === index - 1 || (index === 0 && personIndex === people.length - 1)) {
           position = 'lastSlide'
         }
@@ -36,14 +56,14 @@ function App() {
         )
       })
       }
-      <button className='prev'>
+      <button className='prev' onClick={() => setIndex(index - 1)}>
         <FiChevronLeft />
       </button>
       <button className='next'>
-        <FiChevronRight />
+        <FiChevronRight onClick={() => { setIndex(index + 1) }} />
       </button>
     </div>
-  </section>;
+  </section >;
 }
 
 export default App;
